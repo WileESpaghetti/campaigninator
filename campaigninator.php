@@ -11,3 +11,5 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Domain Path: /languages
 Text Domain: campaigninator
 */
+
+defined( 'ABSPATH' ) or die( 'WordPress must be running to use plugin' );
