@@ -13,3 +13,19 @@ Text Domain: campaigninator
 */
 
 defined( 'ABSPATH' ) or die( 'WordPress must be running to use plugin' );
+
+register_activation_hook(   __FILE__, 'campaigninator_on_activate' );
+register_deactivation_hook( __FILE__, 'campaigninator_on_deactivate' );
+register_uninstall_hook(    __FILE__, 'campaigninator_on_uninstall' );
+
+function campaigninator_on_activate() {
+    // FIXME stub
+}
+
+function campaigninator_on_deactivate() {
+    // FIXME stub
+}
+
+function campaigninator_on_uninstall() {
+    // FIXME stub
+}
