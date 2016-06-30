@@ -7,7 +7,7 @@ FIXME find out which of these are optional
 TODO update preview link as you type
 TODO maybe use the_permalink filter to add URL campaign parameters
 TODO hide generator until someone clicks edit on an existing link, or clicks the add new button
-TODO dropdown for campaign templates
+TODO dropdown for campaign templates / should fill using tags from a link post that has a special "features" taxonomy that has the value of "template" or something else, then we can just query posts to get a list of those
 TODO should be able to have a default campaign to auto-fill values
 -->
 
