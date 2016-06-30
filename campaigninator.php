@@ -16,8 +16,10 @@ defined( 'ABSPATH' ) or die( 'WordPress must be running to use plugin' );
 
 define('CAMPAIGNINATOR_PATH',    plugin_dir_path(__FILE__));
 define('CAMPAIGNINATOR_URL',     plugin_dir_url(__FILE__));
+define('CAMPAIGNINATOR_VERSION', '0.0.0');
 
 require_once(CAMPAIGNINATOR_PATH . 'metaboxes/url-builder-google/url_builder_google_meta.php');
+require_once(CAMPAIGNINATOR_PATH . 'metaboxes/url-builder-google/test.php'); // FIXME exploritory code
 require_once(CAMPAIGNINATOR_PATH . 'post-types/post-type-campaigninator-link.php');
 
 register_activation_hook(   __FILE__, 'campaigninator_on_activate' );

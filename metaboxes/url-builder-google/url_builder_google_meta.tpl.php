@@ -71,7 +71,7 @@ required: false
 <p>
     <label>
         <?php _e('Campaign Term', 'campaigninator'); ?><br>
-        <input id="FIXME" class="regular-text" name="FIXME" value="FIXME">
+        <input id="campaign_term" class="regular-text" name="FIXME" value="FIXME">
     </label><br>
     <span class="description">
         Identify paid search keywords. If you're manually tagging paid keyword campaigns, you should also use utm_term

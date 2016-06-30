@@ -4,13 +4,20 @@
 
 add_action( 'add_meta_boxes', 'campaigninator_on_add_meta_boxes' );
 add_action( 'save_post', 'campaigninator_on_save_post_class_meta', 10, 2 );
+add_action( 'admin_enqueue_scripts', 'campaigninator_on_admin_enqueue_scripts' );
+
+function campaigninator_on_admin_enqueue_scripts() {
+    wp_register_script( 'campaigninator-url-builder-google-meta', CAMPAIGNINATOR_URL . '/url_builder_google_meta.js', array('jquery-ui-autocomplete'), CAMPAIGNINATOR_VERSION, true );
+    
+    wp_enqueue_script(  'campaigninator-url-builder-google-meta' );
+}
 
 function campaigninator_on_add_meta_boxes() {
     add_meta_box(
         'campaigninator_url_builder_google_meta',
         __( 'Google Campaign Generator', 'campaigninator' ),
         'campaigninator_url_builder_google_meta_meta_callback',
-        'page',// FIXME loop through all post types
+        'post',// FIXME loop through all post types
         'normal',
         'high'
     );
