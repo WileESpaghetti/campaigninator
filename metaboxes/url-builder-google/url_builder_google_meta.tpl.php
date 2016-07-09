@@ -9,6 +9,9 @@ TODO maybe use the_permalink filter to add URL campaign parameters
 TODO hide generator until someone clicks edit on an existing link, or clicks the add new button
 TODO dropdown for campaign templates / should fill using tags from a link post that has a special "features" taxonomy that has the value of "template" or something else, then we can just query posts to get a list of those
 TODO should be able to have a default campaign to auto-fill values
+TODO link should have a copy button
+TODO link should have a delete button
+TODO link should have an edit button
 -->
 
 <!--
@@ -50,7 +53,7 @@ required: false
 <p>
     <label>
         <?php _e('Campaign Source', 'campaigninator'); ?><br>
-        <input id="FIXME" class="regular-text" name="FIXME" value="FIXME">
+        <input id="FIXME" class="regular-text" name="FIXME" placeholder="<?php bloginfo('name') ?>">
     </label><br>
     <span class="description">
         Identify the advertiser, site, publication, etc. that is sending traffic to your property, for example: google,
@@ -71,7 +74,7 @@ required: false
 <p>
     <label>
         <?php _e('Campaign Term', 'campaigninator'); ?><br>
-        <input id="campaign_term" class="regular-text" name="FIXME" value="FIXME">
+        <input id="campaigninator_utm_term" class="regular-text" name="campaigninator_utm_term" value="FIXME">
     </label><br>
     <span class="description">
         Identify paid search keywords. If you're manually tagging paid keyword campaigns, you should also use utm_term
@@ -95,9 +98,11 @@ required: false
     <!-- FIXME not sure if this is best at the top or bottom of the URL builder -->
     <label><?php _e('Preview', 'campaigninator') ?></label><br>
     <a href="<?php the_permalink() ?>"><?php the_permalink() ?></a>
+    <!-- TODO add buttons for copy -->
 </p>
     
     <input name="campaigninator_google_campaign_submit" id="campaigninator_google_campaign_submit" class="js-campaigninator_google_campaign_submit button button-primary button-large" type="submit" value="Add campaign">
+    <!-- TODO add save as template button -->
 </form>
 
 <script>
@@ -149,6 +154,7 @@ if ( $links->have_posts() ) {
         printf('<li><a href="%s">%s</a></li>', get_the_permalink(), get_the_title());
     }
     echo '</ul>';
+    // TODO add export / google sheets button
 } else {
     // no posts found
 }

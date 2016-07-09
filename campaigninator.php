@@ -21,6 +21,7 @@ define('CAMPAIGNINATOR_VERSION', '0.0.0');
 require_once(CAMPAIGNINATOR_PATH . 'metaboxes/url-builder-google/url_builder_google_meta.php');
 require_once(CAMPAIGNINATOR_PATH . 'metaboxes/url-builder-google/test.php'); // FIXME exploritory code
 require_once(CAMPAIGNINATOR_PATH . 'post-types/post-type-campaigninator-link.php');
+require_once(CAMPAIGNINATOR_PATH . 'post-types/tax-utm-term.php');
 
 register_activation_hook(   __FILE__, 'campaigninator_on_activate' );
 register_deactivation_hook( __FILE__, 'campaigninator_on_deactivate' );

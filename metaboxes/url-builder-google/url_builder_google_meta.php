@@ -7,7 +7,7 @@ add_action( 'save_post', 'campaigninator_on_save_post_class_meta', 10, 2 );
 add_action( 'admin_enqueue_scripts', 'campaigninator_on_admin_enqueue_scripts' );
 
 function campaigninator_on_admin_enqueue_scripts() {
-    wp_register_script( 'campaigninator-url-builder-google-meta', CAMPAIGNINATOR_URL . '/url_builder_google_meta.js', array('jquery-ui-autocomplete'), CAMPAIGNINATOR_VERSION, true );
+    wp_register_script( 'campaigninator-url-builder-google-meta', CAMPAIGNINATOR_URL . 'metaboxes/url-builder-google/url_builder_google_meta.js', array('jquery-ui-autocomplete'), CAMPAIGNINATOR_VERSION, true );
     
     wp_enqueue_script(  'campaigninator-url-builder-google-meta' );
 }
@@ -54,6 +54,11 @@ function campaigninator_on_save_post_class_meta( $post_id, $post ) {
 
     if ( isset( $_POST['campaigninator_utm_name'] ) ) {
         $name = sanitize_text_field( $_POST['campaigninator_utm_name'] );
+        
+        // FIXME refactor this into it's own logic
+        
+        $utmTerms = array_filter(explode(',', sanitize_text_field($_POST['campaigninator_utm_term']))); // FIXME does this trim?
+        // FIXME EMD
 
         if ( empty( $name ) ) {
 //            delete_post_meta( $post_id, 'campaigninator_utm_name' );
@@ -68,6 +73,9 @@ function campaigninator_on_save_post_class_meta( $post_id, $post ) {
                 "post_status" => "publish",
                 "meta_input" => array(
                     "campaigninator_post_id" => $post_id
+                ),
+                "tax_input" => array(
+                    "n8r_utm_term" => $utmTerms
                 )
             ));
             add_action( 'save_post', 'campaigninator_on_save_post_class_meta', 10, 2 );
@@ -84,6 +92,7 @@ function campaigninator_add_link_google_analytics() {
 //    campaigninator_utm_term
 //    campaigninator_utm_content
     $campaign = array();
+    $utmTerms = array();
     $json = ! empty( $_REQUEST['json'] ); // New-style request
 
 //    FIXME check nonce
@@ -137,6 +146,9 @@ function campaigninator_add_link_google_analytics() {
     
     // FIXME isset check
     $campaign['campaigninator_utm_term'] = sanitize_text_field($_POST['campaigninator_utm_term']);
+    $utmTerms = array_filter(explode(',', $campaign['campaigninator_utm_term'])); // FIXME does this trim?
+    unset($campaign['campaigninator_utm_term']);
+
     // FIXME isset check
     $campaign['campaigninator_utm_content'] = sanitize_text_field($_POST['campaigninator_utm_content']);
     
@@ -159,7 +171,10 @@ function campaigninator_add_link_google_analytics() {
         "post_content" => "",
         "post_type" => "campaigninator_link",
         "post_status" => "publish",
-        "meta_input" => $campaign
+        "meta_input" => $campaign,
+        "tax_input" => array(
+            "n8r_utm_term" => $utmTerms
+        )
     ));
     add_action( 'save_post', 'campaigninator_on_save_post_class_meta', 10, 2 );
 
