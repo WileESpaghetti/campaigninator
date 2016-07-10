@@ -11,7 +11,8 @@ function campaigninator_on_admin_enqueue_scripts() {
     
     wp_localize_script( 'campaigninator-url-builder-google-meta', 'Campaigninator',
         array(
-            'ajaxUrl' => admin_url( 'admin-ajax.php' )
+            'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+            'postUrl' => get_the_permalink()
         )
     );
     
@@ -58,8 +59,8 @@ function campaigninator_on_save_post_class_meta( $post_id, $post ) {
         return;
     }
 
-    if ( isset( $_POST['campaigninator_utm_name'] ) ) {
-        $name = sanitize_text_field( $_POST['campaigninator_utm_name'] );
+    if ( isset( $_POST['campaigninator_utm_campaign'] ) ) {
+        $name = sanitize_text_field( $_POST['campaigninator_utm_campaign'] );
         
         // FIXME refactor this into it's own logic
         
@@ -67,10 +68,10 @@ function campaigninator_on_save_post_class_meta( $post_id, $post ) {
         // FIXME EMD
 
         if ( empty( $name ) ) {
-//            delete_post_meta( $post_id, 'campaigninator_utm_name' );
+//            delete_post_meta( $post_id, 'campaigninator_utm_campaign' );
         } else {
-//            add_post_meta(    $post_id, 'campaigninator_utm_name', $name, true );
-//            update_post_meta( $post_id, 'campaigninator_utm_name', $name );
+//            add_post_meta(    $post_id, 'campaigninator_utm_campaign', $name, true );
+//            update_post_meta( $post_id, 'campaigninator_utm_campaign', $name );
             remove_action('save_post', 'campaigninator_on_save_post_class_meta');
             wp_insert_post(array(
                 "post_title" => $name,
@@ -91,7 +92,7 @@ function campaigninator_on_save_post_class_meta( $post_id, $post ) {
 
 add_action( 'wp_ajax_campaigninator_add_link_google_analytics', 'campaigninator_add_link_google_analytics');
 function campaigninator_add_link_google_analytics() {
-//    campaigninator_utm_name // FIXME possible duplicate date (campaign)
+//    campaigninator_utm_campaign // FIXME possible duplicate date (campaign)
 //    campaigninator_utm_source*
 //    campaigninator_utm_medium*
 //    campaigninator_utm_campaign* // todo post name
@@ -132,19 +133,19 @@ function campaigninator_add_link_google_analytics() {
         wp_die(-1);
     }
 
-    // BEGIN validate utm_name
-    if (! isset($_POST['campaigninator_utm_name'])) {
+    // BEGIN validate utm_campaign
+    if (! isset($_POST['campaigninator_utm_campaign'])) {
         // required field missing
         wp_die( -1 );
     }
-    $campaign['campaigninator_utm_name'] = sanitize_text_field($_POST['campaigninator_utm_name']);
-    if (empty($campaign['campaigninator_utm_name'])) {
+    $campaign['campaigninator_utm_campaign'] = sanitize_text_field($_POST['campaigninator_utm_campaign']);
+    if (empty($campaign['campaigninator_utm_campaign'])) {
          // required field missing
         wp_die( -1 );
     }
-    // END validate utm_name
+    // END validate utm_campaign
 
-    // BEGIN validate utm_name
+    // BEGIN validate utm_campaign
     // TODO convert to taxonomy
     if (! isset($_POST['campaigninator_utm_source'])) {
         // required field missing
@@ -155,9 +156,9 @@ function campaigninator_add_link_google_analytics() {
         // required field missing
         wp_die( -1 );
     }
-    // END validate utm_name
+    // END validate utm_campaign
 
-    // BEGIN validate utm_name
+    // BEGIN validate utm_campaign
     // TODO convert to taxonomy
     if (! isset($_POST['campaigninator_utm_medium'])) {
         // required field missing
@@ -168,7 +169,7 @@ function campaigninator_add_link_google_analytics() {
         // required field missing
         wp_die( -1 );
     }
-    // END validate utm_name
+    // END validate utm_campaign
 
     if (isset($_POST['campaigninator_utm_term'])) {
         $utmTerm = sanitize_text_field($_POST['campaigninator_utm_term']); // FIXME does this trim?
@@ -191,7 +192,7 @@ function campaigninator_add_link_google_analytics() {
     
     remove_action('save_post', 'campaigninator_on_save_post_class_meta');
     $return = wp_insert_post(array(
-        "post_title" => $campaign['campaigninator_utm_name'],
+        "post_title" => $campaign['campaigninator_utm_campaign'],
         "post_content" => "",
         "post_type" => "campaigninator_link",
         "post_status" => "publish",

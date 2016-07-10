@@ -27,9 +27,10 @@
         var $spinnerSaveCampaign;
         var $spinnerSavePreset;
         var $postId;
+        var $preview;
         var $utmContent;
         var $utmMedium;
-        var $utmName;
+        var $utmCampaign;
         var $utmSource;
         var $utmTerm;
         // campaigninator_google_campaign_submit
@@ -47,7 +48,7 @@
                 campaigninator_post_id: $postId.val(),
                 campaigninator_utm_content: $utmContent.val(),
                 campaigninator_utm_medium: $utmMedium.val(),
-                campaigninator_utm_name: $utmName.val(),
+                campaigninator_utm_campaign: $utmCampaign.val(),
                 campaigninator_utm_source: $utmSource.val(),
                 campaigninator_utm_term: $utmTerm.val()
             };
@@ -66,11 +67,34 @@
         $spinnerSaveCampaign = $('#spinner_save_campaign');
         $buttonSaveCampaign.on('click', handleSave);
         $postId = $('#campaigninator_post_id');
+        $preview = $('#campaigninator_preview');
         $utmContent = $('#campaigninator_utm_content');
         $utmMedium = $('#campaigninator_utm_medium');
-        $utmName = $('#campaigninator_utm_name');
+        $utmCampaign = $('#campaigninator_utm_campaign');
         $utmSource = $('#campaigninator_utm_source');
         $utmTerm = $('#campaigninator_utm_term');
+
+
         // $buttonSavePreset.on('click', handleSave);
+        function updatePreview() {
+            var url;
+
+            url = Campaigninator.postUrl +
+                '?=utm_source='  + $utmSource.val()  +
+                '?=utm_medium='  + $utmMedium.val()  +
+                '?=utm_term='    + $utmTerm.val()    +
+                '?=utm_content=' + $utmContent.val() +
+                '?=utm_campaign='  + $utmCampaign.val();
+            url = encodeURI(url);
+            $preview.attr('href', url);
+            $preview.html(url);
+            // ?utm_source=multiple%20source&utm_medium=test%20medium&utm_term=test%20term&utm_content=test%20content&utm_campaign=test%20name-->
+        }
+        
+        $utmContent.on('keydown', updatePreview);
+        $utmMedium.on('keydown',  updatePreview);
+        $utmCampaign.on('keydown',    updatePreview);
+        $utmSource.on('keydown',  updatePreview);
+        $utmTerm.on('keydown',    updatePreview);
     });
 }(jQuery, Campaigninator));

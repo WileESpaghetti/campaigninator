@@ -42,7 +42,7 @@
         <p class="alternate">
             <label>
                 <?php _e('Campaign *', 'campaigninator'); ?><br>
-                <input class="regular-text" id="campaigninator_utm_name" name="campaigninator_utm_name"
+                <input class="regular-text" id="campaigninator_utm_campaign" name="campaigninator_utm_campaign"
                        placeholder="<?php _e('Why are they coming to you?', 'campaigninator') ?>">
             </label>
             
@@ -121,7 +121,8 @@
             
             <br>
 
-            <a href="<?php the_permalink() ?>"><?php the_permalink() ?></a>
+            <a id="campaigninator_preview" href="<?php the_permalink() ?>"><?php the_permalink() ?></a>
+<!--            /?utm_source=multiple%20source&utm_medium=test%20medium&utm_term=test%20term&utm_content=test%20content&utm_campaign=test%20name-->
             <!-- TODO link does not reflect changes in filled out text boxes -->
             <!-- TODO add buttons for copy -->
         </p>
@@ -133,4 +134,6 @@
         <span class="spinner" id="spinner_save_campaign"></span>
         <input name="campaigninator_google_campaign_submit" id="campaigninator_google_campaign_submit" class="js-campaigninator_google_campaign_submit button button-primary button-large" type="submit" value="Add campaign">
     </form>
+    <div class="notice notice-success inline"><p><?php _e('New campaign created', 'campaigninator') ?></p></div>'
+    <div class="notice notice-error inline"><p><?php _e('Could not save campaign', 'campaigninator') ?></p></div>'
 </div>
