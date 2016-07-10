@@ -9,6 +9,12 @@ add_action( 'admin_enqueue_scripts', 'campaigninator_on_admin_enqueue_scripts' )
 function campaigninator_on_admin_enqueue_scripts() {
     wp_register_script( 'campaigninator-url-builder-google-meta', CAMPAIGNINATOR_URL . 'metaboxes/url-builder-google/url_builder_google_meta.js', array('jquery-ui-autocomplete'), CAMPAIGNINATOR_VERSION, true );
     
+    wp_localize_script( 'campaigninator-url-builder-google-meta', 'Campaigninator',
+        array(
+            'ajaxUrl' => admin_url( 'admin-ajax.php' )
+        )
+    );
+    
     wp_enqueue_script(  'campaigninator-url-builder-google-meta' );
 }
 
@@ -91,6 +97,7 @@ function campaigninator_add_link_google_analytics() {
 //    campaigninator_utm_campaign* // todo post name
 //    campaigninator_utm_term
 //    campaigninator_utm_content
+    $isPreset = false;
     $campaign = array();
     $utmTerms = array();
     $json = ! empty( $_REQUEST['json'] ); // New-style request
@@ -103,57 +110,74 @@ function campaigninator_add_link_google_analytics() {
 //    if ( ! wp_verify_nonce( $_POST['yupword_audio_meta_box_nonce'], 'yupword_audio_meta_box_save' ) ) {
 //        return;
 //    }
+    
+    if ($isPreset) {
+        // TODO save preset
+        return; // FIXME need proper return val
+    }
 
-    if ( ! isset( $_POST['post_id'] ) ) {
+    if ( ! isset( $_POST['campaigninator_post_id']) ) {
         wp_die( -1 );
     }
 
-    $post_id = intval( $_POST['post_id'] );
+    $post_id = intval( $_POST['campaigninator_post_id'] );
     if ($post_id < 1) {
         wp_die( -1 ); // invalid post id
     }
     $campaign['campaigninator_post_id'] = $post_id;
 
     // QUESTION: may need to move this to the init action? (http://clivern.com/how-to-secure-wordpress-plugins/)
+    // QUESTION: there's not really a good way to check if some other post has an edit_$CUSTOM_POST_TYPE_NAME
     if ( ! current_user_can( 'edit_post', $post_id ) ) {
         wp_die(-1);
     }
 
+    // BEGIN validate utm_name
     if (! isset($_POST['campaigninator_utm_name'])) {
         // required field missing
         wp_die( -1 );
     }
     $campaign['campaigninator_utm_name'] = sanitize_text_field($_POST['campaigninator_utm_name']);
+    if (empty($campaign['campaigninator_utm_name'])) {
+         // required field missing
+        wp_die( -1 );
+    }
+    // END validate utm_name
 
+    // BEGIN validate utm_name
+    // TODO convert to taxonomy
     if (! isset($_POST['campaigninator_utm_source'])) {
         // required field missing
         wp_die( -1 );
     }
     $campaign['campaigninator_utm_source'] = sanitize_text_field($_POST['campaigninator_utm_source']);
+    if (empty($campaign['campaigninator_utm_source'])) {
+        // required field missing
+        wp_die( -1 );
+    }
+    // END validate utm_name
 
+    // BEGIN validate utm_name
+    // TODO convert to taxonomy
     if (! isset($_POST['campaigninator_utm_medium'])) {
         // required field missing
         wp_die( -1 );
     }
     $campaign['campaigninator_utm_medium'] = sanitize_text_field($_POST['campaigninator_utm_medium']);
-
-    if (! isset($_POST['campaigninator_utm_campaign'])) {
+    if (empty($campaign['campaigninator_utm_medium'])) {
         // required field missing
         wp_die( -1 );
     }
-    $campaign['campaigninator_utm_campaign'] = sanitize_text_field($_POST['campaigninator_utm_campaign']);
-    
-    
-    // FIXME isset check
-    $campaign['campaigninator_utm_term'] = sanitize_text_field($_POST['campaigninator_utm_term']);
-    $utmTerms = array_filter(explode(',', $campaign['campaigninator_utm_term'])); // FIXME does this trim?
-    unset($campaign['campaigninator_utm_term']);
+    // END validate utm_name
 
-    // FIXME isset check
-    $campaign['campaigninator_utm_content'] = sanitize_text_field($_POST['campaigninator_utm_content']);
+    if (isset($_POST['campaigninator_utm_term'])) {
+        $utmTerm = sanitize_text_field($_POST['campaigninator_utm_term']); // FIXME does this trim?
+    }
+
+    if (isset($_POST['campaigninator_utm_content'])) {
+        $campaign['campaigninator_utm_content'] = sanitize_text_field($_POST['campaigninator_utm_content']);
+    }
     
-
-
 // TODO delete request
 //    if ( empty($audioUrl) ) {
 //        $deleteMetaSuccessful = delete_post_meta($post_id, 'ypkword_audio_id');
@@ -166,8 +190,8 @@ function campaigninator_add_link_google_analytics() {
 //    }
     
     remove_action('save_post', 'campaigninator_on_save_post_class_meta');
-    $return = wp_insert_post(array( // FIXME not sure what the actual return value is
-        "post_title" => $name,
+    $return = wp_insert_post(array(
+        "post_title" => $campaign['campaigninator_utm_name'],
         "post_content" => "",
         "post_type" => "campaigninator_link",
         "post_status" => "publish",

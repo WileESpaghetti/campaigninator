@@ -38,8 +38,8 @@ function campaigninator_link_post_type() {
         'supports'              => array( 'title', 'custom-fields', ),
         'hierarchical'          => false,
         'public'                => false,
-        'show_ui'               => false,
-        'show_in_menu'          => false,
+        'show_ui'               =>true,
+        'show_in_menu'          => true,
         'menu_position'         => 5,
         'show_in_admin_bar'     => false,
         'show_in_nav_menus'     => false,
@@ -52,4 +52,8 @@ function campaigninator_link_post_type() {
     );
     register_post_type( 'campaigninator_link', $args );
 
+}
+
+function campaigninator_save_campaigninator_link($fields) {
+    
 }
