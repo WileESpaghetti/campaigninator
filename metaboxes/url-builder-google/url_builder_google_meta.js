@@ -10,7 +10,9 @@
         
         // FIXME prevent suggest from showing 0 if no matches are found
         $(id).suggest(url, options);
+        console.log($(id));
     }
+    
     
     $(document).ready(function() {
         setSuggest('source');
@@ -90,7 +92,9 @@
             $preview.html(url);
             // ?utm_source=multiple%20source&utm_medium=test%20medium&utm_term=test%20term&utm_content=test%20content&utm_campaign=test%20name-->
         }
-        
+
+        // FIXME suggestions don't show up when in modal dialog: z-index: 1000000 !important
+        // FIXME kind of gimpy and looses keys a lot. might be better just to scrap
         $utmContent.on('keydown', updatePreview);
         $utmMedium.on('keydown',  updatePreview);
         $utmCampaign.on('keydown',    updatePreview);

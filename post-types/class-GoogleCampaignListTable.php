@@ -12,57 +12,6 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
      * 
      * @var array 
      **************************************************************************/
-    var $example_data = array(
-            array(
-                'ID'        => 1,
-                'title'     => '300',
-                'rating'    => 'R',
-                'director'  => 'Zach Snyder'
-            ),
-            array(
-                'ID'        => 2,
-                'title'     => 'Eyes Wide Shut',
-                'rating'    => 'R',
-                'director'  => 'Stanley Kubrick'
-            ),
-            array(
-                'ID'        => 3,
-                'title'     => 'Moulin Rouge!',
-                'rating'    => 'PG-13',
-                'director'  => 'Baz Luhrman'
-            ),
-            array(
-                'ID'        => 4,
-                'title'     => 'Snow White',
-                'rating'    => 'G',
-                'director'  => 'Walt Disney'
-            ),
-            array(
-                'ID'        => 5,
-                'title'     => 'Super 8',
-                'rating'    => 'PG-13',
-                'director'  => 'JJ Abrams'
-            ),
-            array(
-                'ID'        => 6,
-                'title'     => 'The Fountain',
-                'rating'    => 'PG-13',
-                'director'  => 'Darren Aronofsky'
-            ),
-            array(
-                'ID'        => 7,
-                'title'     => 'Watchmen',
-                'rating'    => 'R',
-                'director'  => 'Zach Snyder'
-            ),
-            array(
-                'ID'        => 8,
-                'title'     => '2001',
-                'rating'    => 'G',
-                'director'  => 'Stanley Kubrick'
-            ),
-        );
-
 
     /** ************************************************************************
      * REQUIRED. Set up a constructor that references the parent constructor. We 
@@ -73,8 +22,8 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
                 
         //Set parent defaults
         parent::__construct( array(
-            'singular'  => 'movie',     //singular name of the listed records
-            'plural'    => 'movies',    //plural name of the listed records
+            'singular'  => 'campaign',     //singular name of the listed records
+            'plural'    => 'campaigns',    //plural name of the listed records
             'ajax'      => false        //does this table support ajax?
         ) );
         
@@ -104,8 +53,11 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
      **************************************************************************/
     function column_default($item, $column_name){
         switch($column_name){
-            case 'rating':
-            case 'director':
+            case 'campaigninator_utm_campaign':
+            case 'campaigninator_utm_source':
+            case 'campaigninator_utm_medium':
+            case 'campaigninator_utm_term':
+            case 'campaigninator_utm_content':
                 return $item[$column_name];
             default:
                 return print_r($item,true); //Show the whole array for troubleshooting purposes
@@ -180,7 +132,7 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
     function get_columns(){
         $columns = array(
             'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text
-            'campaigninator_utm_name'     => 'Name',
+            'campaigninator_utm_campaign'     => 'Name',
             'campaigninator_utm_source'    => 'Source',
             'campaigninator_utm_medium'    => 'Medium',
             'campaigninator_utm_term'    => 'Term',
@@ -332,15 +284,16 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
             while ( $links->have_posts() ) {
                 $links->the_post();
                 $meta = get_post_meta(get_the_ID());
+//                var_dump($meta);
+                $term = get_the_term_list(get_the_ID(), 'n8r_utm_term');
                 @$data[] = array(
                     'ID' => get_the_ID(),
-                    'campaigninator_utm_name' => $meta['campaigninator_utm_name'],
-                    'campaigninator_utm_source' =>  $meta['campaigninator_utm_souce'],
-                    'campaigninator_utm_medium' =>  $meta['campaigninator_utm_medium'],
-                    'campaigninator_utm_terms' => $meta['campaigninator_utm_terms'] ,
-                    'campaigninator_utm_content' =>  $meta['campaigninator_utm_content'],
+                    'campaigninator_utm_campaign' => $meta['campaigninator_utm_campaign'][0],
+                    'campaigninator_utm_source' =>  $meta['campaigninator_utm_source'][0],
+                    'campaigninator_utm_medium' =>  $meta['campaigninator_utm_medium'][0],
+                    'campaigninator_utm_term' => $term ? $term : '',
+                    'campaigninator_utm_content' =>  $meta['campaigninator_utm_content'][0],
                 );
-//                var_dump($data); wp_die();
             }
             // TODO add export / google sheets button
         } else {

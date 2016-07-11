@@ -38,8 +38,9 @@ required: false
 <?php include_once(CAMPAIGNINATOR_PATH . 'metaboxes/url-builder-google/url_builder_google_generator_modal.tpl.php') ?>
 <!-- TODO set custom height / width to 100% should work -->
 <a class="thickbox hide-if-no-js taxonomy-add-new"
-   href="#TB_inline?width=100%&height=100%&inlineId=campaigninator_generator">
-    <?php _e('+ Add new campaign', 'campaigninator') ?>
+   href="#TB_inline?width=100%&height=100%&inlineId=campaigninator_generator"
+   title="<?php _e('Create New Campaign', 'campaigninator') ?>">
+    <?php _e('+ Create new campaign', 'campaigninator') ?>
 </a>
 
 <!--

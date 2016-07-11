@@ -64,7 +64,7 @@ function campaigninator_on_save_post_class_meta( $post_id, $post ) {
         
         // FIXME refactor this into it's own logic
         
-        $utmTerms = array_filter(explode(',', sanitize_text_field($_POST['campaigninator_utm_term']))); // FIXME does this trim?
+        $utmTerm = array_filter(explode(',', sanitize_text_field($_POST['campaigninator_utm_term']))); // FIXME does this trim?
         // FIXME EMD
 
         if ( empty( $name ) ) {
@@ -100,7 +100,7 @@ function campaigninator_add_link_google_analytics() {
 //    campaigninator_utm_content
     $isPreset = false;
     $campaign = array();
-    $utmTerms = array();
+    $utmTerm = array();
     $json = ! empty( $_REQUEST['json'] ); // New-style request
 
 //    FIXME check nonce
@@ -198,7 +198,7 @@ function campaigninator_add_link_google_analytics() {
         "post_status" => "publish",
         "meta_input" => $campaign,
         "tax_input" => array(
-            "n8r_utm_term" => $utmTerms
+            "n8r_utm_term" => $utmTerm
         )
     ));
     add_action( 'save_post', 'campaigninator_on_save_post_class_meta', 10, 2 );
