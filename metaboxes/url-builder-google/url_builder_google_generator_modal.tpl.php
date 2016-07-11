@@ -11,7 +11,7 @@
     >
         <input id="campaigninator_post_id" name="campaigninator_post_id" type="hidden" value="<?php print(get_the_ID()) ?>">
 
-        <p class="alternate" style="padding: 1.5em">
+        <p class="" style="padding: 1.5em">
             <label>
                 <?php _e('Destination URL', 'campaigninator') ?>
             </label>
@@ -21,23 +21,23 @@
             <a href="<?php the_permalink() ?>"><?php the_permalink() ?></a>
         </p>
         
-        <p style="padding: 1.5em">
-            <label>
-                <?php _e('Preset', 'campaigninator'); ?><br>
-                <select>
-                    <option>
-                        <!-- FIXME blanks all of the fields -->
-                    </option>
-                    <option>
-                        <?php _e('Default', 'campaigninator'); ?>
-                    </option>
-                </select>
-            </label>
+<!--        <p style="padding: 1.5em">-->
+<!--            <label>-->
+<!--                --><?php //_e('Preset', 'campaigninator'); ?><!--<br>-->
+<!--                <select>-->
+<!--                    <option>-->
+<!--                         FIXME blanks all of the fields -->
+<!--                    </option>-->
+<!--                    <option>-->
+<!--                        --><?php //_e('Default', 'campaigninator'); ?>
+<!--                    </option>-->
+<!--                </select>-->
+<!--            </label>-->
 <!--            -->
 <!--            <span class="description"><br>-->
 <!--                --><?php //_e('Fill out campaign with preset values', 'campaigninator') ?>
 <!--            </span>-->
-        </p>
+<!--        </p>-->
 
         <p class="alternate" style="padding: 1.5em">
             <label>
@@ -45,12 +45,13 @@
                 <input class="regular-text" id="campaigninator_utm_campaign" name="campaigninator_utm_campaign"
                        placeholder="<?php _e('Why are they coming to you?', 'campaigninator') ?>">
             </label>
-<!--            -->
-<!--            <br>-->
-<!--            -->
-<!--            <span class="description">-->
-<!--                --><?php //_e('The individual campaign name, slogan, promo code, etc. for a product.', 'campaigninator') ?>
-<!--            </span>-->
+            
+            <br>
+            
+            <span class="description wp-ui-text-notification">
+                <?php //_e('The individual campaign name, slogan, promo code, etc. for a product.', 'campaigninator') ?>
+                <?php _e('Campaign name can not be empty', 'campaigninator') ?>
+            </span>
         </p>
 
         <p style="padding: 1.5em">
@@ -59,13 +60,14 @@
                 <input class="regular-text" id="campaigninator_utm_source" name="campaigninator_utm_source"
                        placeholder="<?php _e('Where are they coming from?', 'campaigninator') ?>">
             </label>
-<!--            -->
-<!--            <br>-->
-<!--            -->
-<!--            <span class="description">-->
-<!--                --><?php //_e('Identify the advertiser, site, publication, etc. that is sending traffic to your property, ' .
+            
+            <br>
+            
+            <span class="description wp-ui-text-notification">
+                <?php //_e('Identify the advertiser, site, publication, etc. that is sending traffic to your property, ' .
 //                    'for example: google, newsletter4, billboard.', 'campaigninator'); ?>
-<!--            </span>-->
+                <?php _e('Campaign source can not be empty', 'campaigninator') ?>
+            </span>
         </p>
 
         <p class="alternate" style="padding: 1.5em">
@@ -74,12 +76,13 @@
                 <input class="regular-text" id="campaigninator_utm_medium" name="campaigninator_utm_medium"
                        placeholder="<?php _e('How are they getting to you?', 'campaigninator') ?>">
             </label>
-<!--            -->
-<!--            <br>-->
-<!--            -->
-<!--            <span class="description">-->
-<!--                --><?php //_e('The advertising or marketing medium, example: banner or email newsletter.', 'campaigninator') ?>
-<!--            </span>-->
+            
+            <br>
+            
+            <span class="description wp-ui-text-notification">
+                <?php //_e('The advertising or marketing medium, example: banner or email newsletter.', 'campaigninator') ?>
+                <?php _e('Campaign medium can not be empty', 'campaigninator') ?>
+            </span>
         </p>
 
         <p style="padding: 1.5em">
@@ -131,9 +134,11 @@
 <!--        <span class="spinner" style="float: none"></span>-->
 <!--        <input name="campaigninator_google_campaign_save_preset" id="campaigninator_google_campaign_save_preset" class="js-campaigninator_google_campaign_save_preset button button-large" type="submit" value="Save as preset">-->
 
+        
+        <input style="margin-left: 1.5em" name="campaigninator_google_campaign_submit" id="campaigninator_google_campaign_submit" class="js-campaigninator_google_campaign_submit button button-primary button-large" type="submit" value="Add campaign">
         <span class="spinner" style="float: none" id="spinner_save_campaign"></span>
-        <input name="campaigninator_google_campaign_submit" id="campaigninator_google_campaign_submit" class="js-campaigninator_google_campaign_submit button button-primary button-large" type="submit" value="Add campaign">
+        
+        <div class="notice notice-success inline js-campaigninator-notice-success" style="margin-left: 0; margin-bottom: 1.4em; display: none;"><p><?php _e('New campaign created', 'campaigninator') ?></p></div>'
+        <div class="notice notice-error inline js-campaigninator-notice-error" style="margin-left: 0; margin-bottom: 1.4em; display: none;"><p><?php _e('Could not save campaign', 'campaigninator') ?></p></div>'
     </form>
-    <div class="notice notice-success inline"><p><?php _e('New campaign created', 'campaigninator') ?></p></div>'
-    <div class="notice notice-error inline"><p><?php _e('Could not save campaign', 'campaigninator') ?></p></div>'
 </div>

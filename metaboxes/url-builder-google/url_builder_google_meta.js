@@ -21,6 +21,7 @@
     });
 }(jQuery, Campaigninator));
 (function($, Campaigninator) {
+    // FIXME reset form on thickbox close
     $(document).ready(function() {
         var url;
         
@@ -35,6 +36,8 @@
         var $utmCampaign;
         var $utmSource;
         var $utmTerm;
+        var $saveSuccess;
+        var $saveError;
         // campaigninator_google_campaign_submit
         
         url = Campaigninator.ajaxUrl + '?action=campaigninator_add_link_google_analytics';
@@ -43,6 +46,8 @@
             var data;
 
             $spinnerSaveCampaign.css('visibility', 'visible');
+            $saveError.css('display', 'none');
+            $saveSuccess.css('display', 'none');
 
             event.preventDefault();
 
@@ -59,25 +64,18 @@
                 // TODO show brief success message then close thickbox
                 console.log(response);
                 $spinnerSaveCampaign.css('visibility', 'hidden');
+                var result = parseInt(response, 10)
+                if (result  < 1 || isNaN(result)) {
+                    $saveError.fadeIn();
+                } else {
+                    $saveSuccess.fadeIn();
+                    tb_remove();
+                    window.location.reload();
+                }
             });
             return false;
-            // TODO reset form on success
         }
-        
-        $buttonSaveCampaign = $('.js-campaigninator_google_campaign_submit');
-        // FIXME should be called from an $form.on('submit') but metaboxes strip out <form> tags
-        $spinnerSaveCampaign = $('#spinner_save_campaign');
-        $buttonSaveCampaign.on('click', handleSave);
-        $postId = $('#campaigninator_post_id');
-        $preview = $('#campaigninator_preview');
-        $utmContent = $('#campaigninator_utm_content');
-        $utmMedium = $('#campaigninator_utm_medium');
-        $utmCampaign = $('#campaigninator_utm_campaign');
-        $utmSource = $('#campaigninator_utm_source');
-        $utmTerm = $('#campaigninator_utm_term');
 
-
-        // $buttonSavePreset.on('click', handleSave);
         function updatePreview() {
             var url;
 
@@ -95,10 +93,41 @@
 
         // FIXME suggestions don't show up when in modal dialog: z-index: 1000000 !important
         // FIXME kind of gimpy and looses keys a lot. might be better just to scrap
+        // FIXME should be called from an $form.on('submit') but metaboxes strip out <form> tags
+        $buttonSaveCampaign = $('.js-campaigninator_google_campaign_submit');
+        $spinnerSaveCampaign = $('#spinner_save_campaign');
+        $buttonSaveCampaign.on('click', handleSave);
+        // $buttonSavePreset.on('click', handleSave);
+        $postId = $('#campaigninator_post_id');
+        $preview = $('#campaigninator_preview');
+        $utmContent = $('#campaigninator_utm_content');
+        $utmMedium = $('#campaigninator_utm_medium');
+        $utmCampaign = $('#campaigninator_utm_campaign');
+        $utmSource = $('#campaigninator_utm_source');
+        $utmTerm = $('#campaigninator_utm_term');
+        $saveError = $('.js-campaigninator-notice-error');
+        $saveSuccess = $('.js-campaigninator-notice-success');
+        
+        
+        $('body').on('thickbox:removed', function() {
+            $utmContent.val('');
+            $utmMedium.val('');
+            $utmCampaign.val('');
+            $utmSource.val('');
+            $utmTerm.val('');
+            $saveSuccess.fadeOut();
+            $saveError.fadeOut();
+            $preview.attr('href', Campaigninator.postUrl);
+            $preview.html(Campaigninator.postUrl);
+        });
+
+
         $utmContent.on('keydown', updatePreview);
         $utmMedium.on('keydown',  updatePreview);
         $utmCampaign.on('keydown',    updatePreview);
         $utmSource.on('keydown',  updatePreview);
         $utmTerm.on('keydown',    updatePreview);
+        
+        tb_position(); // make thickbox content full width
     });
 }(jQuery, Campaigninator));

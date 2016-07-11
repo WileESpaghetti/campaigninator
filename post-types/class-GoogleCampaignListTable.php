@@ -182,7 +182,7 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
      **************************************************************************/
     function get_bulk_actions() {
         $actions = array(
-            'delete'    => 'Delete'
+//            'delete'    => 'Delete'
         );
         return $actions;
     }
@@ -349,6 +349,7 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
          * in your own package classes.
          */
         $total_items = count($data);
+//        $per_page = $total_items + 1;
         
         
         /**
@@ -356,7 +357,7 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
          * to ensure that the data is trimmed to only the current page. We can use
          * array_slice() to 
          */
-        $data = array_slice($data,(($current_page-1)*$per_page),$per_page);
+//        $data = array_slice($data,(($current_page-1)*$per_page),$per_page);
         
         
         
@@ -370,11 +371,11 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
         /**
          * REQUIRED. We also have to register our pagination options & calculations.
          */
-        $this->set_pagination_args( array(
-            'total_items' => $total_items,                  //WE have to calculate the total number of items
-            'per_page'    => $per_page,                     //WE have to determine how many items to show on a page
-            'total_pages' => ceil($total_items/$per_page)   //WE have to calculate the total number of pages
-        ) );
+//        $this->set_pagination_args( array(
+//            'total_items' => $total_items,                  //WE have to calculate the total number of items
+//            'per_page'    => $per_page,                     //WE have to determine how many items to show on a page
+//            'total_pages' => ceil($total_items/$per_page)   //WE have to calculate the total number of pages
+//        ) );
     }
 
    
