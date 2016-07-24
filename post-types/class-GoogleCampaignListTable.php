@@ -1,4 +1,5 @@
 <?php
+// FIXME need some esc_attr and esc_url's
 class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
      
     /** ************************************************************************
@@ -54,10 +55,7 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
     function column_default($item, $column_name){
         switch($column_name){
             case 'campaigninator_utm_campaign':
-            case 'campaigninator_utm_source':
-            case 'campaigninator_utm_medium':
-            case 'campaigninator_utm_term':
-            case 'campaigninator_utm_content':
+            case 'campaigninator_utm_link':
                 return $item[$column_name];
             default:
                 return print_r($item,true); //Show the whole array for troubleshooting purposes
@@ -82,7 +80,8 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
      * @return string Text to be placed inside the column <td> (movie title only)
      **************************************************************************/
 //    function column_title($item){
-    function column_campaigninator_utm_campaign($item){
+    function column_campaigninator_utm_campaign($item) {
+        $meta = get_post_meta($item['ID']);
         $thickboxUrl = "#TB_inline?width=100%&height=100%&inlineId=campaigninator_generator";
         $title = __('Edit', 'campaigninator');
         $classes = 'thickbox js-edit-button hide-if-no-js';
@@ -94,11 +93,12 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
             'data-utm-medium="%s" '   .
             'data-utm-content="%s"',
             $item['ID'],
-            $item['campaigninator_utm_campaign'],
-            $item['campaigninator_utm_source'],
-            /*$item['campaigninator_utm_term']*/'', // FIXME convert hrefs into comma separated terms
-            $item['campaigninator_utm_medium'],
-            $item['campaigninator_utm_content']
+            $meta['campaigninator_utm_campaign'][0],
+            $meta['campaigninator_utm_source'][0],
+//            $meta['campaigninator_utm_term'][0], // FIXME convert hrefs into comma separated terms
+            '',
+            $meta['campaigninator_utm_medium'][0],
+            $meta['campaigninator_utm_content'][0]
         );
 
         $actionEdit = sprintf('<a class="%s" href="%s" title="%s" %s>Edit</a>', $classes, $thickboxUrl, $title, $data);
@@ -158,10 +158,7 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
         $columns = array(
             'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text
             'campaigninator_utm_campaign'     => 'Name',
-            'campaigninator_utm_source'    => 'Source',
-            'campaigninator_utm_medium'    => 'Medium',
-            'campaigninator_utm_term'    => 'Term',
-            'campaigninator_utm_content'    => 'Content',
+            'campaigninator_utm_link'    => 'URL',
         );
         return $columns;
     }
@@ -230,6 +227,30 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
     }
 
 
+    function generate_edit_link($id, $text="Edit") {
+        $meta = get_post_meta($id);
+        $thickboxUrl = "#TB_inline?width=100%&height=100%&inlineId=campaigninator_generator";
+        $title = __('Edit', 'campaigninator');
+        $classes = 'thickbox js-edit-button hide-if-no-js';
+        $data = sprintf(
+            'data-link-post-id="%s" ' .
+            'data-utm-campaign="%s" ' .
+            'data-utm-source="%s" '   .
+            'data-utm-term="%s" '     .
+            'data-utm-medium="%s" '   .
+            'data-utm-content="%s"',
+            $id,
+            $meta['campaigninator_utm_campaign'][0],
+            $meta['campaigninator_utm_source'][0],
+//            $meta['campaigninator_utm_term'][0], // FIXME convert hrefs into comma separated terms
+            '',
+            $meta['campaigninator_utm_medium'][0],
+            $meta['campaigninator_utm_content'][0]
+        );
+
+        $actionEdit = sprintf('<a class="%s" href="%s" title="%s" %s>%s</a>', $classes, $thickboxUrl, $title, $data, $text);
+        return $actionEdit;
+    }
     /** ************************************************************************
      * REQUIRED! This is where you prepare your data for display. This method will
      * usually be used to query the database, sort and filter the data, and generally
@@ -311,13 +332,33 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
                 $meta = get_post_meta(get_the_ID());
 //                var_dump($meta);
                 $term = get_the_term_list(get_the_ID(), 'n8r_utm_term');
+
+                $utm =sprintf(
+                    '?utm_source=%s' .
+                    '&utm_medium=%s' .
+                    '&utm_term=%s' .
+                    '&utm_content=%s'.
+                    '&utm_campaign=%s',
+                    $meta['campaigninator_utm_source'][0],
+                    $meta['campaigninator_utm_medium'][0],
+                    /*$meta['campaigninator_utm_term'][0],*/"",
+                    $meta['campaigninator_utm_content'][0],
+                    $meta['campaigninator_utm_campaign'][0]
+                );
+
+                $link = sprintf('<a href="%s%s">%s</a>',
+                    get_the_permalink($meta['campaigninator_post_id'][0]),
+                    $utm,
+                    $utm
+                );
+
+                // FIXME should be thickbox edit link
+                $nameCol = $this->generate_edit_link(get_the_ID(), $meta['campaigninator_utm_campaign'][0]);
+
                 @$data[] = array(
                     'ID' => get_the_ID(),
-                    'campaigninator_utm_campaign' => $meta['campaigninator_utm_campaign'][0],
-                    'campaigninator_utm_source' =>  $meta['campaigninator_utm_source'][0],
-                    'campaigninator_utm_medium' =>  $meta['campaigninator_utm_medium'][0],
-                    'campaigninator_utm_term' => $term ? $term : '',
-                    'campaigninator_utm_content' =>  $meta['campaigninator_utm_content'][0],
+                    'campaigninator_utm_campaign' => $nameCol,
+                    'campaigninator_utm_link' => $link
                 );
             }
             // TODO add export / google sheets button
