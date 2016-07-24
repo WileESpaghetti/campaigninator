@@ -81,19 +81,44 @@ class CampaigninatorGoogleCampaignListTable extends WP_List_Table {
      * @param array $item A singular item (one full row's worth of data)
      * @return string Text to be placed inside the column <td> (movie title only)
      **************************************************************************/
-    function column_title($item){
-        
+//    function column_title($item){
+    function column_campaigninator_utm_campaign($item){
+        $thickboxUrl = "#TB_inline?width=100%&height=100%&inlineId=campaigninator_generator";
+        $title = __('Edit', 'campaigninator');
+        $classes = 'thickbox js-edit-button hide-if-no-js';
+        $data = sprintf(
+            'data-link-post-id="%s" ' .
+            'data-utm-campaign="%s" ' .
+            'data-utm-source="%s" '   .
+            'data-utm-term="%s" '     .
+            'data-utm-medium="%s" '   .
+            'data-utm-content="%s"',
+            $item['ID'],
+            $item['campaigninator_utm_campaign'],
+            $item['campaigninator_utm_source'],
+            /*$item['campaigninator_utm_term']*/'', // FIXME convert hrefs into comma separated terms
+            $item['campaigninator_utm_medium'],
+            $item['campaigninator_utm_content']
+        );
+
+        $actionEdit = sprintf('<a class="%s" href="%s" title="%s" %s>Edit</a>', $classes, $thickboxUrl, $title, $data);
+
         //Build row actions
         @$actions = array(
-            'edit'      => sprintf('<a href="?page=%s&action=%s&movie=%s">Edit</a>',$_REQUEST['page'],'edit',$item['ID']),
-            'delete'    => sprintf('<a href="?page=%s&action=%s&movie=%s">Delete</a>',$_REQUEST['page'],'delete',$item['ID']),
+//            'copy'    => sprintf('<a href="?page=%s&action=%s&movie=%s">Copy</a>',$_REQUEST['page'],'delete',$item['ID']),
+            'edit'      => $actionEdit,
+//            'delete'    => sprintf('<a href="?page=%s&action=%s&movie=%s">Delete</a>',$_REQUEST['page'],'delete',$item['ID']),
         );
-        
+
         //Return the title contents
-        return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
-            /*$1%s*/ $item['title'],
-            /*$2%s*/ $item['ID'],
-            /*$3%s*/ $this->row_actions($actions)
+//        return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
+//            /*$1%s*/ $item['campaigninator_utm_campaign'],
+//            /*$2%s*/ $item['ID'],
+//            /*$3%s*/ $this->row_actions($actions)
+//        );
+        return sprintf('%s %s',
+            $item['campaigninator_utm_campaign'],
+            $this->row_actions($actions)
         );
     }
 
