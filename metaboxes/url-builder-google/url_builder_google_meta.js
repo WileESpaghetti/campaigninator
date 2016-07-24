@@ -29,6 +29,7 @@
         var $buttonSavePreset;
         var $spinnerSaveCampaign;
         var $spinnerSavePreset;
+        var $linkPostId;
         var $postId;
         var $preview;
         var $utmContent;
@@ -52,6 +53,7 @@
             event.preventDefault();
 
             data = {
+                campaigninator_link_post_id: $linkPostId.val(),
                 campaigninator_post_id: $postId.val(),
                 campaigninator_utm_content: $utmContent.val(),
                 campaigninator_utm_medium: $utmMedium.val(),
@@ -64,7 +66,7 @@
                 // TODO show brief success message then close thickbox
                 console.log(response);
                 $spinnerSaveCampaign.css('visibility', 'hidden');
-                var result = parseInt(response, 10)
+                var result = parseInt(response, 10);
                 if (result  < 1 || isNaN(result)) {
                     $saveError.fadeIn();
                 } else {
@@ -98,6 +100,7 @@
         $spinnerSaveCampaign = $('#spinner_save_campaign');
         $buttonSaveCampaign.on('click', handleSave);
         // $buttonSavePreset.on('click', handleSave);
+        $linkPostId = $('#campaigninator_link_post_id');
         $postId = $('#campaigninator_post_id');
         $preview = $('#campaigninator_preview');
         $utmContent = $('#campaigninator_utm_content');
@@ -110,6 +113,8 @@
         
         
         $('body').on('thickbox:removed', function() {
+            var wordPressDefaultPostId = 0;
+            $linkPostId.val(wordPressDefaultPostId);
             $utmContent.val('');
             $utmMedium.val('');
             $utmCampaign.val('');
@@ -127,6 +132,16 @@
         $utmCampaign.on('keydown',    updatePreview);
         $utmSource.on('keydown',  updatePreview);
         $utmTerm.on('keydown',    updatePreview);
+
+        $('.js-edit-button').on('click', function(event) {
+            $link = $(event.target);
+            $linkPostId.val($link.data('linkPostId'));
+            $utmContent.val($link.data('utmContent'));
+            $utmMedium.val($link.data('utmMedium'));
+            $utmCampaign.val($link.data('utmCampaign'));
+            $utmSource.val($link.data('utmSource'));
+            $utmTerm.val($link.data('utmTerm'));
+        });
         
         tb_position(); // make thickbox content full width
     });

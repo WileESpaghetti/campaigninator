@@ -82,7 +82,7 @@ function campaigninator_on_save_post_class_meta( $post_id, $post ) {
                     "campaigninator_post_id" => $post_id
                 ),
                 "tax_input" => array(
-                    "n8r_utm_term" => $utmTerms
+                    "n8r_utm_term" => $utmTerm
                 )
             ));
             add_action( 'save_post', 'campaigninator_on_save_post_class_meta', 10, 2 );
@@ -126,6 +126,15 @@ function campaigninator_add_link_google_analytics() {
         wp_die( -1 ); // invalid post id
     }
     $campaign['campaigninator_post_id'] = $post_id;
+
+    // FIXME make sure post ID is a campaigninator link
+    $link_post_id = 0;
+    if (isset($_POST['campaigninator_link_post_id'])) {
+        $link_post_id = intval($_POST['campaigninator_link_post_id']);
+        if ($link_post_id < 0) {
+            wp_die(-1); // invalid post id
+        }
+    }
 
     // QUESTION: may need to move this to the init action? (http://clivern.com/how-to-secure-wordpress-plugins/)
     // QUESTION: there's not really a good way to check if some other post has an edit_$CUSTOM_POST_TYPE_NAME
@@ -192,6 +201,7 @@ function campaigninator_add_link_google_analytics() {
     
     remove_action('save_post', 'campaigninator_on_save_post_class_meta');
     $return = wp_insert_post(array(
+        "ID" => $link_post_id,
         "post_title" => $campaign['campaigninator_utm_campaign'],
         "post_content" => "",
         "post_type" => "campaigninator_link",

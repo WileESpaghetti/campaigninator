@@ -10,6 +10,7 @@
         name="campaiginator_google_analytics_campaign_generator"
     >
         <input id="campaigninator_post_id" name="campaigninator_post_id" type="hidden" value="<?php print(get_the_ID()) ?>">
+        <input id="campaigninator_link_post_id" name="campaigninator_link_post_id" type="hidden" value="0">
 
         <p class="" style="padding: 1.5em">
             <label>
