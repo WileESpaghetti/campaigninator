@@ -82,11 +82,11 @@
             var url;
 
             url = Campaigninator.postUrl +
-                '?=utm_source='  + $utmSource.val()  +
-                '&=utm_medium='  + $utmMedium.val()  +
-                '&=utm_term='    + $utmTerm.val()    +
-                '&=utm_content=' + $utmContent.val() +
-                '&=utm_campaign='  + $utmCampaign.val();
+                '?utm_source='  + $utmSource.val()  +
+                '&utm_medium='  + $utmMedium.val()  +
+                '&utm_term='    + $utmTerm.val()    +
+                '&utm_content=' + $utmContent.val() +
+                '&utm_campaign='  + $utmCampaign.val();
             url = encodeURI(url);
             $preview.attr('href', url);
             $preview.html(url);
